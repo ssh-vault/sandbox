@@ -15,7 +15,7 @@ import (
 // For RSA keys, there should be three tuples which should be:  { key_type, public_exponent, modulus }
 
 func EncodePublicKey(key interface{}, comment string) (string, error) {
-	if rsaKey, ok := key.(rsa.PublicKey); ok {
+	if rsaKey, ok := key.(*rsa.PublicKey); ok {
 		key_type := "ssh-rsa"
 
 		modulus_bytes := rsaKey.N.Bytes()

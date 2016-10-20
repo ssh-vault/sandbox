@@ -56,4 +56,11 @@ func main() {
 		":",
 		-1)
 	fmt.Printf("fp = %+v\n", fp)
+
+	k, err := ssh.EncodePublicKey(pub_key, "")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("k = %+v\n", k)
+
 }
