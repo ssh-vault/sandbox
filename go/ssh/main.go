@@ -1,11 +1,13 @@
 package main
 
 import (
+	"crypto/md5"
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/ssh-vault/sandbox/go/ssh/ssh"
 )
@@ -35,10 +37,23 @@ func main() {
 	}
 
 	// Encode to PEM format
-	pem := string(pem.EncodeToMemory(&pem.Block{
+	outpem := pem.EncodeToMemory(&pem.Block{
 		Type:  "RSA PUBLIC KEY",
 		Bytes: pkix,
-	}))
+	})
 
-	fmt.Printf("%s", pem)
+	p, _ := pem.Decode(outpem)
+	if p == nil {
+		panic("No PEM found")
+	}
+
+	fmt.Printf("%s", outpem)
+	fingerPrint := md5.New()
+	fingerPrint.Write(p.Bytes)
+	fp := strings.Replace(fmt.Sprintf("% x",
+		fingerPrint.Sum(nil)),
+		" ",
+		":",
+		-1)
+	fmt.Printf("fp = %+v\n", fp)
 }
