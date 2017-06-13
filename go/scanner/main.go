@@ -21,5 +21,5 @@ func main() {
 			b.WriteString(fmt.Sprintf("%s\n", scanner.Text()))
 		}
 	}
-	fmt.Printf("%s", b.String())
+	fmt.Printf("%s", b.Bytes())
 }
