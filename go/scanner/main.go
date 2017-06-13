@@ -4,33 +4,9 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"io"
 	"log"
 	"os"
 )
-
-type Scanner struct {
-	*bufio.Scanner
-	N int
-}
-
-func NewScanner(r io.Reader) *Scanner {
-	return &Scanner{bufio.NewScanner(r), 0}
-}
-
-func (s *Scanner) Scan() bool {
-	for s.Scanner.Scan() {
-		s.N++
-		if len(bytes.TrimSpace(s.Bytes())) > 0 {
-			return true
-		}
-	}
-	return false
-}
-
-func (s *Scanner) LineNumber() int {
-	return s.N
-}
 
 func main() {
 	f, err := os.Open("test.txt")
@@ -38,9 +14,12 @@ func main() {
 		log.Fatal(err)
 	}
 	defer f.Close()
-	s := NewScanner(f)
-	for s.Scan() {
-		fmt.Println(s.Text())
+	var b bytes.Buffer
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		if len(bytes.TrimSpace(scanner.Bytes())) > 0 {
+			b.WriteString(fmt.Sprintf("%s\n", scanner.Text()))
+		}
 	}
-	fmt.Printf("s.LineNumber() = %+v\n", s.LineNumber())
+	fmt.Printf("%s", b.String())
 }
