@@ -3,9 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"io"
 	"net/http"
-	"net/textproto"
 	"os"
 )
 
@@ -17,17 +15,15 @@ func main() {
 		return
 	}
 	defer res.Body.Close()
-	reader := bufio.NewReader(res.Body)
-	tp := textproto.NewReader(reader)
-	for {
-		if line, err := tp.ReadLine(); err != nil {
-			if err == io.EOF {
-				// if file is emtpy
-				return
-			}
-			return
-		} else {
-			fmt.Printf("%s\n\n", line)
+	scanner := bufio.NewScanner(res.Body)
+	scanner.Split(bufio.ScanBytes)
+	for scanner.Scan() {
+		c := scanner.Text()
+		switch c {
+		case "\r":
+			fmt.Println()
+		default:
+			fmt.Printf("%s", c)
 		}
 	}
 }
