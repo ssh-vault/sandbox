@@ -10,19 +10,20 @@ import (
 )
 
 func main() {
-	service, account, label, accessGroup, password := "TestGenericPasswordRef", "test", "", "", "toomanysecrets"
+	//service, account, label, accessGroup, password := "TestGenericPasswordRef", "test", "", "", "toomanysecrets"
 
-	item := keychain.NewGenericPassword(service, account, label, []byte(password), accessGroup)
-	err := keychain.AddItem(item)
-	if err != nil {
-		log.Fatal(err)
-	}
+	//item := keychain.NewGenericPassword(service, account, label, []byte(password), accessGroup)
+	//defer func() { _ = keychain.DeleteItem(item) }()
+	//err := keychain.AddItem(item)
+	//if err != nil {
+	//log.Fatal(err)
+	//}
 
-	passwordAfter, err := keychain.GetGenericPassword(service, account, label, accessGroup)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("passwordAfter = %s\n", passwordAfter)
+	//passwordAfter, err := keychain.GetGenericPassword(service, account, label, accessGroup)
+	//if err != nil {
+	//log.Fatal(err)
+	//}
+	//fmt.Printf("passwordAfter = %s\n", passwordAfter)
 
 	usr, _ := user.Current()
 	dir := usr.HomeDir
@@ -30,9 +31,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	keyPassword, err := keychain.GetGenericPassword("SSH", keyPath, "", "")
+	keyPassword, err := keychain.GetGenericPassword("OpenSSH", keyPath, "SSH: "+keyPath, "com.apple.ssh.passphrases")
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("keyPassword = %+v\n", keyPassword)
+	fmt.Printf("keyPassword = %s\n", keyPassword)
 }
